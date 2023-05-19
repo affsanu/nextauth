@@ -1,7 +1,7 @@
-import DbConnect from "@/app/lib/db";
+import DbConnect from '../../lib/db';
 import bcrypt from "bcryptjs";
-import User from "@/app/models/User";
-import { signJwtToken } from "@/app/lib/jwt";
+import User from "../../models/User";
+import { signJwtToken } from "../../lib/jwt";
 
 export async function POST(req) {
   try {
@@ -13,13 +13,13 @@ export async function POST(req) {
     }
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("Invalid Credential!");
+      return new Response(JSON.stringify({error: "Invalid credential!"}), { status: 404 });
     }
 
     const verifyPass = await bcrypt.compare(password, user.password);
 
     if (!verifyPass) {
-      throw new Error("Invalid Credential!");
+      return new Response(JSON.stringify({error: "Invalid credential!"}), { status: 404 });
     }
 
     const token = signJwtToken({id: user._id});

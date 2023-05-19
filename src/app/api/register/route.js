@@ -1,28 +1,28 @@
-import DbConnect from "@/app/lib/db";
+import DbConnect from "../../lib/db";
 import bcrypt from "bcryptjs";
-import User from "@/app/models/User";
+import User from "../../models/User";
+import { signJwtToken } from "../../lib/jwt";
 
 export async function POST(req) {
   try {
     await DbConnect();
 
-    const { username, email, password } = await req.json();
-
-    const isExisting = await User.findOne({ email });
-    if (isExisting) {
+    const { name, email, password } = await req.json();
+    if (!email || !password) {
+      throw new Error("All field must be filled!");
+    }
+    const oldUser = await User.findOne({ email });
+    if (oldUser) {
       throw new Error("User already exists!");
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({
-      username,
-      email,
-      password: hashedPassword,
-    });
+    const passHash = await bcrypt.hash(password, 10);
 
-    return new Response(JSON.stringify({ msg: "User registration success!" }), {
-      status: 201,
-    });
+    const user = await User.create({ name, email, password: passHash });
+
+    const token = signJwtToken({ id: user._id });
+
+    return new Response(JSON.stringify(token), { status: 201 });
   } catch (error) {
     return new Response(JSON.stringify(error.message), { status: 500 });
   }
