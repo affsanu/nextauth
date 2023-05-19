@@ -1,13 +1,13 @@
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css"
-import { Pathway_Extreme } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { ThemeProvider } from "./components/MaterialCom";
 import TopMenu from "./components/Header";
 import Footer from "./components/Footer";
 
-const CustomFonts = Pathway_Extreme({
-  weight: ['100', '400', '700'],
-  subsets: ['latin-ext']
+const poppins = Poppins({
+  weight: ['400'],
+  subsets: ['latin']
 });
 
 export const metadata = {
@@ -20,7 +20,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={CustomFonts.className}>
+      <body className={poppins.className}>
         <ThemeProvider>
           <TopMenu />
           {children}

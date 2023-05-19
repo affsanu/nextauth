@@ -38,7 +38,7 @@ const workTitle = [
   'Blood Donation'
 ]
 
-export function Home() {
+export function home() {
 
   return (
     <>
@@ -122,4 +122,4 @@ export function Home() {
   );
 }
 
-export default Home;
+export default home;
